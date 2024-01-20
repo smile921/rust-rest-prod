@@ -19,6 +19,10 @@ pub struct Settings {
     pub logging: Logging,
     #[serde(default)]
     pub config: ConfigInfo,
+    #[serde(default)]
+    pub token_secret: String,
+    #[serde(default)]
+    pub token_timeout_seconds: i64,
 }
 
 #[derive(Debug, Default, Deserialize,Clone)]

@@ -1,0 +1,8 @@
+POST http://127.0.0.1:8080/v1/login 
+Content-Type: application/json;charset=UTF-8 
+
+{
+    "username": "admin",
+    "password": "pass"
+}
+ 
