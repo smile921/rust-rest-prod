@@ -61,11 +61,11 @@ pub async fn login(State(state):State<Arc<ApplicationState>>,
 }
 
 
-fn validate_password(password: &str, hash: &str) -> anyhow::Result<String> {
+fn validate_password(password: &str, hash: &str) -> anyhow::Result<()> {
     let argon2 = Argon2::default();
     let parsed_hash = PasswordHash::new(hash).map_err(|e| anyhow!(e.to_string()))?;
 
     argon2
-        .verify_password(password.as_bytes(),&parsed_hash)
+        .verify_password(password.as_bytes(), &parsed_hash)
         .map_err(|_e| anyhow!("Failed to verify password"))
 }
