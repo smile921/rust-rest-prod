@@ -1,9 +1,9 @@
 use clap::{ArgMatches, Command, value_parser, Arg};
 use tower_http::trace::TraceLayer;
-use crate::settings::{Settings, self};
+use crate::{settings::{Settings, self}, state::ApplicationState};
 
 use axum::{Router, ServiceExt};
-use std::net::{IpAddr,Ipv4Addr, SocketAddr};
+use std::{net::{IpAddr,Ipv4Addr, SocketAddr}, sync::Arc};
 
 pub fn configure() -> Command {
     Command::new("serve").about("satrt the server!").arg(
@@ -26,14 +26,16 @@ pub fn handle(matches: &ArgMatches, settings: &Settings) -> anyhow::Result<()> {
     Ok(())
 }
 
- fn start_tokio(port:u16, _settings:&Settings)-> anyhow::Result<()> {
+ fn start_tokio(port:u16, settings:&Settings)-> anyhow::Result<()> {
     tokio::runtime::Builder::new_multi_thread()
         .enable_all()
         .build()
         .unwrap()
         .block_on(async move {
+            let state = Arc::new(ApplicationState::new(settings)?);
+
             let addr =  SocketAddr::new(IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0)), port);
-            let routes = crate::api::configure()
+            let routes = crate::api::configure(state)
                 .layer(TraceLayer::new_for_http());
             tracing::info!("starting axum on port {}", port);
             let listener = tokio::net::TcpListener::bind(addr).await.unwrap();

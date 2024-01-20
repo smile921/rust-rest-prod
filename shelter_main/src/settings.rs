@@ -1,17 +1,17 @@
 use config::{Config, Environment, File};
 use serde::Deserialize;
 
-#[derive(Debug, Deserialize, Default)]
+#[derive(Debug, Deserialize, Default,Clone)]
 pub struct Database {
     pub url: Option<String>,
 }
 
-#[derive(Debug, Default, Deserialize)]
+#[derive(Debug, Default, Deserialize,Clone)]
 pub struct Logging {
     pub log_level: Option<String>,
 }
 
-#[derive(Debug, Default, Deserialize)]
+#[derive(Debug, Default, Deserialize,Clone)]
 pub struct Settings {
     #[serde(default)]
     pub database: Database,
@@ -21,7 +21,7 @@ pub struct Settings {
     pub config: ConfigInfo,
 }
 
-#[derive(Debug, Default, Deserialize)]
+#[derive(Debug, Default, Deserialize,Clone)]
 pub struct ConfigInfo {
     pub location: Option<String>,
     pub env_prefix: Option<String>,
