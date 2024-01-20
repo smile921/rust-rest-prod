@@ -1,25 +1,26 @@
-use crate::settings::Settings; 
-use clap::{ArgMatches, Command, Arg};
-use sea_orm::Database;
+use crate::settings::Settings;
+use anyhow::anyhow;
+use argon2::Argon2;
+use clap::{Arg, ArgMatches, Command};
+use password_hash::rand_core::OsRng;
+use password_hash::{PasswordHasher, SaltString};
 use sea_orm::ColumnTrait;
+use sea_orm::Database;
 use sea_orm::QueryFilter;
 use sea_orm::{ActiveModelTrait, EntityTrait};
 use serde_json::json;
-use anyhow::anyhow;
-use argon2::Argon2;
-use password_hash::rand_core::OsRng;
-use password_hash::{PasswordHasher, SaltString};
 
 pub fn configure() -> Command {
-    Command::new("createadmin").about("create the default admin user!").arg(
-        Arg::new("password")
-        .short('p')
-        .long("password")
-        .value_name("PASSWORD")
-        .help("password for admin user")
-        .default_value("Pa$$wd123"),
-
-    )
+    Command::new("createadmin")
+        .about("create the default admin user!")
+        .arg(
+            Arg::new("password")
+                .short('p')
+                .long("password")
+                .value_name("PASSWORD")
+                .help("password for admin user")
+                .default_value("Pa$$wd123"),
+        )
 }
 
 pub fn handle(matches: &ArgMatches, settings: &Settings) -> anyhow::Result<()> {
@@ -41,7 +42,7 @@ pub fn handle(matches: &ArgMatches, settings: &Settings) -> anyhow::Result<()> {
                     .await?;
                 if !admins.is_empty() {
                     println!("admin use is already exists");
-                    return  Ok(());
+                    return Ok(());
                 }
                 let encrypted_password = encrypt_password(password)?;
                 let admin_model = entity::user::ActiveModel::from_json(json!({
@@ -53,18 +54,16 @@ pub fn handle(matches: &ArgMatches, settings: &Settings) -> anyhow::Result<()> {
                 } else {
                     println!("Failed to create admin user");
                 }
-            Ok::<(),anyhow::Error>(())
-        })?; 
-
+                Ok::<(), anyhow::Error>(())
+            })?;
     }
     Ok(())
 }
 
-
 fn encrypt_password(password: &str) -> anyhow::Result<String> {
-    let salt  = SaltString::generate(&mut OsRng);
+    let salt = SaltString::generate(&mut OsRng);
     let argon2 = Argon2::default();
-    if let Ok(hash) = argon2.hash_password(password.as_bytes(), &salt){
+    if let Ok(hash) = argon2.hash_password(password.as_bytes(), &salt) {
         Ok(hash.to_string())
     } else {
         Err(anyhow!("Failed to hash password"))

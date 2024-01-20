@@ -1,22 +1,22 @@
 use config::{Config, Environment, File};
 use serde::Deserialize;
 
-#[derive(Debug, Deserialize, Default,Clone)]
+#[derive(Debug, Deserialize, Default, Clone)]
 pub struct Database {
     pub url: Option<String>,
 }
 
-#[derive(Debug, Default, Deserialize,Clone)]
+#[derive(Debug, Default, Deserialize, Clone)]
 pub struct Logging {
     pub log_level: Option<String>,
 }
 
-#[derive(Debug,Deserialize,Default,Clone)]
+#[derive(Debug, Deserialize, Default, Clone)]
 #[allow(unused)]
 pub struct Tracing {
     pub otlp_endpoint: Option<String>,
 }
-#[derive(Debug, Default, Deserialize,Clone)]
+#[derive(Debug, Default, Deserialize, Clone)]
 pub struct Settings {
     #[serde(default)]
     pub database: Database,
@@ -32,7 +32,7 @@ pub struct Settings {
     pub tracing: Tracing,
 }
 
-#[derive(Debug, Default, Deserialize,Clone)]
+#[derive(Debug, Default, Deserialize, Clone)]
 pub struct ConfigInfo {
     pub location: Option<String>,
     pub env_prefix: Option<String>,

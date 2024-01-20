@@ -1,7 +1,7 @@
-mod hello;
-mod serve;
-mod migrate;
 mod createadmin;
+mod hello;
+mod migrate;
+mod serve;
 
 use crate::settings::Settings;
 use clap::{ArgMatches, Command};

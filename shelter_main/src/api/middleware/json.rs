@@ -1,7 +1,7 @@
 use axum::async_trait;
+use axum::extract::rejection::JsonRejection;
 use axum::extract::FromRequest;
 use axum::extract::Request;
-use axum::extract::rejection::JsonRejection;
 use axum::http::StatusCode;
 use serde_json::json;
 use serde_json::Value;
@@ -14,11 +14,10 @@ pub struct CustomJson<T>(pub T);
 impl<S, T> FromRequest<S> for CustomJson<T>
 where
     axum::Json<T>: FromRequest<S, Rejection = JsonRejection>,
-    S: Send + Sync, 
+    S: Send + Sync,
 {
     type Rejection = (StatusCode, axum::Json<Value>);
-    async fn from_request(req: Request, state:&S) -> Result<Self, Self::Rejection>{
-
+    async fn from_request(req: Request, state: &S) -> Result<Self, Self::Rejection> {
         match axum::Json::<T>::from_request(req, state).await {
             Ok(value) => Ok(Self(value.0)),
             Err(rejection) => Err((
@@ -29,6 +28,5 @@ where
                 })),
             )),
         }
-
     }
 }

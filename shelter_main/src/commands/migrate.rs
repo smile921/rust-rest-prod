@@ -1,13 +1,13 @@
-use clap::{Command, ArgMatches};
+use crate::settings::Settings;
+use clap::{ArgMatches, Command};
 use migration::{Migrator, MigratorTrait};
 use sea_orm::Database;
-use crate::settings::Settings;
 
 pub fn configure() -> Command {
     Command::new("migrate").about("Run database migrations")
 }
 
-pub fn handle(matches: &ArgMatches, settings: &Settings)-> anyhow::Result<()> {
+pub fn handle(matches: &ArgMatches, settings: &Settings) -> anyhow::Result<()> {
     if let Some(_matches) = matches.subcommand_matches("migrate") {
         tokio::runtime::Builder::new_current_thread()
             .enable_all()
@@ -18,9 +18,9 @@ pub fn handle(matches: &ArgMatches, settings: &Settings)-> anyhow::Result<()> {
                 let conn = Database::connect(db_url)
                     .await
                     .expect("Database connection failed");
-                Migrator::up(&conn,None).await.unwrap();
-            }); 
+                Migrator::up(&conn, None).await.unwrap();
+            });
     }
-    
+
     Ok(())
 }
