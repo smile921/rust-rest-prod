@@ -1,3 +1,5 @@
+@token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcwNTcxODkzNCwiZXhwIjoxNzA1NzIyNTM0fQ.SwuGQA2NvGOWe39L6XGdBkdr5EZv42b6wv6a4m0o3bQ
+###
 POST http://127.0.0.1:8080/v1/login 
 Content-Type: application/json;charset=UTF-8 
 
@@ -13,4 +15,22 @@ Content-Type: application/json;charset=UTF-8
     "username": "admin",
     "password": "Password23s"
 }
-  
+
+
+### 
+POST http://127.0.0.1:8080/v1/dog 
+Content-Type: application/json;charset=UTF-8
+Authorization: Bearer {{token}} 
+
+{
+  "name": "Fido", 
+  "description": "...", 
+  "date_of_birth": "2022-01-01", 
+  "chip_number": "1234", 
+  "gender": "male", 
+  "is_sterilized": true, 
+  "breed": "mixed", 
+  "size": "medium", 
+  "weight": 25, 
+  "hair": "brown"
+}

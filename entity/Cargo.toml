@@ -13,3 +13,4 @@ path = "src/lib.rs"
 serde = { version = "1", features = ["derive"] }
 sea-orm = { version = "0.12" }
 chrono = { version = "0.4" }
+utoipa = "4.2"

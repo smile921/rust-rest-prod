@@ -2,6 +2,7 @@ use chrono::NaiveDate;
 use sea_orm::entity::prelude::*;
 use serde::{Deserialize, Serialize};
 
+use utoipa::ToSchema;
 #[derive(Clone, Debug, PartialEq, Eq, DeriveEntityModel, Serialize, Deserialize)]
 #[sea_orm(table_name = "dog")]
 pub struct Model {
@@ -26,3 +27,19 @@ pub struct Model {
 pub enum Relation {}
 
 impl ActiveModelBehavior for ActiveModel {}
+
+
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize, DeriveIntoActiveModel, ToSchema)]
+pub struct DogCreateRequest {
+    pub name: String,
+    pub description: String,
+    pub date_of_birth: NaiveDate,
+    pub date_of_vaccination: Option<NaiveDate>,
+    pub chip_number: String,
+    pub gender: String,
+    pub is_sterilized: bool,
+    pub breed: String,
+    pub size: String,
+    pub weight: Option<i32>,
+    pub hair: String,
+}
