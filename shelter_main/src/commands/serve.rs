@@ -1,8 +1,8 @@
 use clap::{ArgMatches, Command, value_parser, Arg};
 use tower_http::trace::TraceLayer;
-use crate::{settings::{Settings, self}, state::ApplicationState};
+use crate::{settings::{Settings}, state::ApplicationState};
 
-use axum::{Router, ServiceExt};
+use axum::{ServiceExt};
 use std::{net::{IpAddr,Ipv4Addr, SocketAddr}, sync::Arc};
 
 pub fn configure() -> Command {
