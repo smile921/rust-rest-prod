@@ -22,4 +22,7 @@ tracing ={ version = "0.1", features = ["log"] }
 tracing-log = "0.2"
 tracing-subscriber = {version =  "0.3",features = [ "registry", "env-filter"] }
 migration={ path = "../migration"}
+entity = {path = "../entity"}
 sea-orm = { version = "0.12", features = [ "sqlx-mysql","sqlx-sqlite", "runtime-tokio-rustls", "macros" ] }
+password-hash = "0.5"
+argon2 = "0.5"
