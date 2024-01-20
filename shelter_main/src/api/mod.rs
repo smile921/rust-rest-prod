@@ -1,6 +1,8 @@
 use std::sync::Arc;
 
 use axum::Router;
+use utoipa::OpenApi;
+use utoipa_swagger_ui::SwaggerUi;
 
 use crate::state::ApplicationState;
 
@@ -10,6 +12,10 @@ mod response;
 mod handlers;
 mod middleware;
 
+
 pub fn configure(state: Arc<ApplicationState>) -> Router {
-    Router::new().nest("/v1", v1::configure(state))
+    Router::new()
+        .merge(SwaggerUi::new("/swagger-ui")
+            .url("/v1/ap-docs/openapi.json", crate::api::v1::ApiDoc::openapi(),))
+        .nest("/v1", v1::configure(state))
 }

@@ -10,10 +10,22 @@ use crate::api::middleware::json::CustomJson;
 use crate::api::response::TokenClaims;
 use crate::api::response::error::{Status, AppError};
 use crate::api::response::login::LoginResponse;
+use crate::api::response::error::ErrorResponse;
 use crate::state::ApplicationState;
 use crate::api::request::login::LoginRequest;
 
 
+
+#[utoipa::path(
+    post,
+    path = "/login",
+    tag = "login",
+    request_body = LoginRequest,
+    responses (
+        (status= 200, description = "Login Success", body = LoginResponse),
+        (status= 401, description = "Unauthrized  ", body = ErrorResponse),
+    ),
+)]
 
 pub async fn login(State(state):State<Arc<ApplicationState>>,
         CustomJson(payload): CustomJson<LoginRequest>

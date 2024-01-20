@@ -18,6 +18,16 @@ Content-Type: application/json;charset=UTF-8
 
 
 ### 
+GET http://127.0.0.1:8080/v1/dogs
+Content-Type: application/json;charset=UTF-8
+Authorization: Bearer {{token}} 
+
+
+### 
+GET http://127.0.0.1:8080/v1/dogs/1
+Content-Type: application/json;charset=UTF-8
+Authorization: Bearer {{token}} 
+### 
 POST http://127.0.0.1:8080/v1/dogs
 Content-Type: application/json;charset=UTF-8
 Authorization: Bearer {{token}} 

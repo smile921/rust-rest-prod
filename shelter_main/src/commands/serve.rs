@@ -7,7 +7,7 @@ use opentelemetry_sdk::trace as sdktrace;
 use sea_orm::Database;
 use tower_http::trace::TraceLayer;
 use tracing::{level_filters::LevelFilter, Level};
-use tracing_subscriber::Registry;
+use tracing_subscriber::{Registry, fmt};
 use tracing_subscriber::layer::SubscriberExt;
 use tracing_subscriber::util::SubscriberInitExt;
 use crate::{settings::{Settings}, state::ApplicationState};
@@ -47,21 +47,31 @@ pub fn handle(matches: &ArgMatches, settings: &Settings) -> anyhow::Result<()> {
         .block_on(async move {
             global::set_text_map_propagator(TraceContextPropagator::new());
 
-            let otlp_endpoint = settings.tracing.otlp_endpoint.clone().unwrap_or("http://127.0.0.1:4317".to_string());
+            // let otlp_endpoint = settings.tracing.otlp_endpoint.clone().unwrap_or("http://127.0.0.1:4317".to_string());
 
-            let tracer = init_tracer(&otlp_endpoint)?;
-            let telemetry_layer = tracing_opentelemetry::layer().with_tracer(tracer);
+            // let tracer = init_tracer(&otlp_endpoint)?;
 
             // let subscriber = Registry::default()
             // .with(LevelFilter::from_level(Level::DEBUG));
 
             let subscriber = tracing_subscriber::registry()
-                .with(LevelFilter::from_level(Level::DEBUG))
-                .with(telemetry_layer);
-            subscriber.init();
+                .with(LevelFilter::from_level(Level::DEBUG));
+            
+            let telemetry_layer = if let Some(otlp_endpoint) = settings.tracing.otlp_endpoint.clone() {
+                let tracer = init_tracer(&otlp_endpoint)?;
 
-            let _meter_privider = init_metrics(&otlp_endpoint);
-            let _log_provider = init_logs(&otlp_endpoint);
+                let _meter_privider = init_metrics(&otlp_endpoint);
+                let _log_provider = init_logs(&otlp_endpoint);
+                Some(tracing_opentelemetry::layer().with_tracer(tracer))
+            } else {
+                None
+            };
+                
+            // let telemetry_layer = tracing_opentelemetry::layer().with_tracer(tracer);
+            subscriber.with(telemetry_layer)
+                .with(fmt::Layer::default())
+                .init();
+
 
             let db_url = settings.database.url.clone().unwrap_or("".to_string());
             let db_conn = Database::connect(db_url)

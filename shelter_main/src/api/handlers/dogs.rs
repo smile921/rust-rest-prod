@@ -21,6 +21,16 @@ use sea_orm::TryIntoModel;
 use tracing::instrument;
 use std::sync::Arc;
 
+#[utoipa::path(
+    post,
+    path ="/dogs",
+    tag = "dogs",
+    request_body = DogCreateRequest,
+    responses  (
+        (status = 200 , description="create dog success", body = DogCreateRequest),
+        (status = 401 , description= "Unauthrized ", body = ErrorResponse)
+    )
+)]
 #[instrument(level="info", name="crate_dog", skip_all)]
 pub async fn create(
         Extension(_claims): Extension<TokenClaims>,
@@ -38,6 +48,16 @@ pub async fn create(
         Ok(Json(response))
     }
 
+
+    #[utoipa::path(
+        get,
+        path ="/dogs",
+        tag = "dogs", 
+        responses  (
+            (status = 200 , description="list dog success", body = DogListResponse),
+            // (status = 401 , description= "Unauthrized ", body = ErrorResponse)
+        )
+    )]
     #[instrument(level="info", name="list_dogs", skip_all)]
     pub async fn list(
         State(state):State<Arc<ApplicationState>>,
@@ -56,6 +76,21 @@ pub async fn create(
         tracing::info!("number of dogs : {}",n);
         Ok(Json(response))
     }
+
+    
+
+    #[utoipa::path(
+        get,
+        path ="/dogs/{dogId}",
+        tag = "dogs", 
+        params (
+            ("dogId"=i32, Path, description = " dog id "),
+        ),
+        responses  (
+            (status = 200 , description="list dog success", body = DogListResponse),
+            // (status = 401 , description= "Unauthrized ", body = ErrorResponse)
+        )
+    )]
     #[instrument(level="info", name="get_dog", skip_all)]
     pub async fn get(State(state):State<Arc<ApplicationState>>,
         Path(dog_id): Path<i32>,
