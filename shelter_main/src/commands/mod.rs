@@ -15,5 +15,6 @@ pub fn configure(command: Command) -> Command {
 pub fn handle(matches: &ArgMatches, settings: &Settings) -> anyhow::Result<()> {
     hello::handle(matches, settings)?;
     serve::handle(matches, settings)?;
+    migrate::handle(matches, settings)?;
     Ok(())
 }
