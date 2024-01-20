@@ -1,4 +1,5 @@
 use clap::{ArgMatches, Command, value_parser, Arg};
+use tower_http::trace::TraceLayer;
 use crate::settings::{Settings, self};
 
 use axum::{Router, ServiceExt};
@@ -32,7 +33,9 @@ pub fn handle(matches: &ArgMatches, settings: &Settings) -> anyhow::Result<()> {
         .unwrap()
         .block_on(async move {
             let addr =  SocketAddr::new(IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0)), port);
-            let routes = crate::api::configure();
+            let routes = crate::api::configure()
+                .layer(TraceLayer::new_for_http());
+            tracing::info!("starting axum on port {}", port);
             let listener = tokio::net::TcpListener::bind(addr).await.unwrap();
             axum::serve(listener,routes.into_make_service())
                 .await?;
