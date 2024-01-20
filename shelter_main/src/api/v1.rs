@@ -42,6 +42,7 @@ use utoipa::OpenApi;
                 crate::api::request::login::LoginRequest,
                 crate::api::response::login::LoginResponse,
                 crate::api::response::error::Status,
+                crate::api::response::error::ErrorResponse,
                 crate::api::response::dog::DogGetResponse,
                 crate::api::response::dog::DogListResponse,
                 crate::api::response::dog::DogCreateResponse,

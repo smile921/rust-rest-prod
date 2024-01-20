@@ -9,8 +9,7 @@ use std::sync::Arc;
 use crate::api::middleware::json::CustomJson;
 use crate::api::response::TokenClaims;
 use crate::api::response::error::{Status, AppError};
-use crate::api::response::login::LoginResponse;
-use crate::api::response::error::ErrorResponse;
+use crate::api::response::login::LoginResponse; 
 use crate::state::ApplicationState;
 use crate::api::request::login::LoginRequest;
 
@@ -22,8 +21,8 @@ use crate::api::request::login::LoginRequest;
     tag = "login",
     request_body = LoginRequest,
     responses (
-        (status= 200, description = "Login Success", body = LoginResponse),
-        (status= 401, description = "Unauthrized  ", body = ErrorResponse),
+        (status= 200, description = "Login Success 登录成功", body = LoginResponse),
+        (status= 401, description = "Unauthrized  未授权的", body = ErrorResponse),
     ),
 )]
 
