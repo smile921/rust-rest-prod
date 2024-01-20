@@ -2,7 +2,7 @@ use clap::{Arg, Command};
 use dotenv::dotenv;
 
 use shelter_main::{commands, settings};
-use tracing::{subscriber, level_filters::LevelFilter, Level};
+use tracing::{level_filters::LevelFilter, Level};
 use tracing_subscriber::{Registry, layer::SubscriberExt};
 
 fn main() -> anyhow::Result<()> {
