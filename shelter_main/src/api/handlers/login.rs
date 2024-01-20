@@ -6,7 +6,9 @@ use jsonwebtoken::{encode, Header, EncodingKey};
 use password_hash::{PasswordHash, PasswordVerifier};
 use sea_orm::{EntityTrait, QueryFilter, ColumnTrait};
 use std::sync::Arc;
+use crate::api::middleware::json::CustomJson;
 use crate::api::response::TokenClaims;
+use crate::api::response::error::{Status, AppError};
 use crate::api::response::login::LoginResponse;
 use crate::state::ApplicationState;
 use crate::api::request::login::LoginRequest;
@@ -14,8 +16,8 @@ use crate::api::request::login::LoginRequest;
 
 
 pub async fn login(State(state):State<Arc<ApplicationState>>,
-        Json(payload): Json<LoginRequest>
-    ) ->  Result<Json<LoginResponse>,StatusCode>{
+        CustomJson(payload): CustomJson<LoginRequest>
+    ) ->  Result<Json<LoginResponse>,AppError>{
 
         match entity::user::Entity::find()
             .filter(entity::user::Column::Username.eq(&payload.username))
@@ -23,16 +25,24 @@ pub async fn login(State(state):State<Arc<ApplicationState>>,
             .await {
                 Ok(admins) => {
                     if admins.is_empty() {
-                        return Err(StatusCode::UNAUTHORIZED)
+
+                        return Err( 
+                            AppError(StatusCode::UNAUTHORIZED, anyhow!("use is not an admin"),
+                        ));
                     }
 
                     let admin = &admins[0];
                     if validate_password(&payload.password, &admin.password).is_err() {
-                        return Err(StatusCode::UNAUTHORIZED)
+                        return Err(
+                            AppError(StatusCode::UNAUTHORIZED,anyhow!("Password mismatch"),
+                            ),
+                        );
                     }
                 }
-                Err(_) => {
-                    return Err(StatusCode::UNAUTHORIZED)
+                Err(e) => {
+                    return Err(
+                        AppError(StatusCode::UNAUTHORIZED,anyhow!(e.to_string()),)
+                    );
                 }
             
         }
@@ -51,10 +61,10 @@ pub async fn login(State(state):State<Arc<ApplicationState>>,
             &Header::default(),
             &claims,
             &EncodingKey::from_secret(secret.as_bytes()),
-        ).unwrap();
+        ).unwrap_or("".to_string());
 
         let response = LoginResponse {
-            status: "success".to_string(),
+            status: Status::Success,
             token,
         };
         Ok(Json(response))
