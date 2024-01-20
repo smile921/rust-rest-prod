@@ -11,6 +11,11 @@ pub struct Logging {
     pub log_level: Option<String>,
 }
 
+#[derive(Debug,Deserialize,Default,Clone)]
+#[allow(unused)]
+pub struct Tracing {
+    pub otlp_endpoint: Option<String>,
+}
 #[derive(Debug, Default, Deserialize,Clone)]
 pub struct Settings {
     #[serde(default)]
@@ -23,6 +28,8 @@ pub struct Settings {
     pub token_secret: String,
     #[serde(default)]
     pub token_timeout_seconds: i64,
+    #[serde(default)]
+    pub tracing: Tracing,
 }
 
 #[derive(Debug, Default, Deserialize,Clone)]

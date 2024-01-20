@@ -9,3 +9,15 @@ pub struct DogCreateResponse {
     pub status: Status,
     pub data: Option<Model>,
 }
+
+#[derive(Serialize,Debug)]
+pub struct DogListResponse {
+    pub status: Status,
+    pub data: Vec<Model>,
+}
+
+#[derive(Serialize,Debug)]
+pub struct DogGetResponse {
+    pub status: Status,
+    pub data: Option<Model>,
+}
