@@ -1,5 +1,5 @@
-use clap::{ArgMatches, Command};
 use crate::settings::Settings;
+use clap::{ArgMatches, Command};
 
 pub fn configure() -> Command {
     Command::new("hello").about("Hello World!")
