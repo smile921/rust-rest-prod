@@ -1,6 +1,8 @@
+use std::ffi::OsString;
 use std::sync::Arc;
 
 use crate::state::ApplicationState;
+use std::path::Path;
 
 use super::handlers;
 use super::middleware::jwt::auth;
@@ -8,6 +10,9 @@ use axum::routing::{get, post};
 use axum::{middleware, Router};
 
 pub fn configure(state: Arc<ApplicationState>) -> Router {
+    let assets_dir = state.settings.load().assets_dir.clone();
+    let dir: OsString = assets_dir.into();
+    let _path = Path::new(dir.as_os_str());
     Router::new()
         .route(
             "/hello",
@@ -24,7 +29,11 @@ pub fn configure(state: Arc<ApplicationState>) -> Router {
             "/dogs/:id",
             get(handlers::dogs::get).with_state(state.clone()),
         )
-        .route("/login", post(handlers::login::login).with_state(state))
+        .route(
+            "/login",
+            post(handlers::login::login).with_state(state.clone()),
+        )
+    // .nest("/static", services::ServeDir::new(path))
 }
 
 use utoipa::openapi::security::HttpAuthScheme;

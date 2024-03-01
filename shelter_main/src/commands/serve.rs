@@ -10,13 +10,12 @@ use opentelemetry_sdk::{
 use sea_orm::Database;
 use tower_http::trace::TraceLayer;
 use tracing::{level_filters::LevelFilter, Level};
+use tracing_subscriber::fmt;
 use tracing_subscriber::layer::SubscriberExt;
 use tracing_subscriber::util::SubscriberInitExt;
-use tracing_subscriber::{fmt, Registry};
 
 use axum::ServiceExt;
 use std::{
-    f64::consts::E,
     net::{IpAddr, Ipv4Addr, SocketAddr},
     sync::Arc,
 };

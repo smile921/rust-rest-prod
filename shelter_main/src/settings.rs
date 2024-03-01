@@ -30,6 +30,8 @@ pub struct Settings {
     pub token_timeout_seconds: i64,
     #[serde(default)]
     pub tracing: Tracing,
+    #[serde(default)]
+    pub assets_dir: String,
 }
 
 #[derive(Debug, Default, Deserialize, Clone)]

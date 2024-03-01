@@ -2,8 +2,6 @@ use clap::{Arg, Command};
 use dotenv::dotenv;
 
 use shelter_main::{commands, settings};
-use tracing::{level_filters::LevelFilter, Level};
-use tracing_subscriber::{layer::SubscriberExt, Registry};
 
 fn main() -> anyhow::Result<()> {
     dotenv().ok();

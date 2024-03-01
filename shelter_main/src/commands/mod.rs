@@ -1,4 +1,5 @@
 mod createadmin;
+mod gen;
 mod hello;
 mod migrate;
 mod serve;
@@ -12,6 +13,7 @@ pub fn configure(command: Command) -> Command {
         .subcommand(serve::configure())
         .subcommand(migrate::configure())
         .subcommand(createadmin::configure())
+        .subcommand(gen::configure())
 }
 
 pub fn handle(matches: &ArgMatches, settings: &Settings) -> anyhow::Result<()> {
@@ -19,5 +21,6 @@ pub fn handle(matches: &ArgMatches, settings: &Settings) -> anyhow::Result<()> {
     serve::handle(matches, settings)?;
     migrate::handle(matches, settings)?;
     createadmin::handle(matches, settings)?;
+    gen::handle(matches, settings)?;
     Ok(())
 }
